@@ -1,18 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { Share, View, Text, ScrollView, FlatList } from 'react-native'
+import { Share, FlatList, Animated } from 'react-native'
 import { RootStackParamList } from '@root/App'
 import FileBrowserGridItem, {
   ClowdFile,
   ClowdFiles
 } from '@src/component/FileBrowserGridItem'
+import { getStatusBarHeight } from 'react-native-status-bar-height'
+import StatusBar from '@src/component/StatusBar'
+import { RouteProp } from '@react-navigation/native'
 
-type FileBrowserScreenNavigationProp = StackNavigationProp<
+export type FileBrowserScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'FileBrowser'
 >
 
-type FileBrowserScreenParams = {
+export type FileBrowserScreenRouteProp = RouteProp<
+  RootStackParamList,
+  'FileBrowser'
+>
+
+export type FileBrowserScreenParams = {
   navigation: FileBrowserScreenNavigationProp
 }
 
@@ -67,6 +75,38 @@ const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
     {
       title: 'memo.txt',
       type: 'txt'
+    },
+    {
+      title: 'wallpaper.png',
+      type: 'png'
+    },
+    {
+      title: 'memo.txt',
+      type: 'txt'
+    },
+    {
+      title: 'wallpaper.png',
+      type: 'png'
+    },
+    {
+      title: 'memo.txt',
+      type: 'txt'
+    },
+    {
+      title: 'wallpaper.png',
+      type: 'png'
+    },
+    {
+      title: 'memo.txt',
+      type: 'txt'
+    },
+    {
+      title: 'wallpaper.png',
+      type: 'png'
+    },
+    {
+      title: 'memo.txt',
+      type: 'txt'
     }
   ]
 
@@ -80,67 +120,47 @@ const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
     })
   }
 
-  function FilesList() {
-    const files = sampleFiles.map((file, index) => {
-      return (
-        <FileBrowserGridItem
-          title={file.title}
-          type={file.type}
-          onPress={() => {
-            if (file.type === 'folder') {
-              navigation.push('FileBrowser', {
-                folderName: file.title
-              })
-            } else {
-              Share.share(
-                {
-                  url: ''
-                },
-                {
-                  subject: 'title'
-                }
-              )
-            }
-          }}
-          key={index}
-        />
-      )
-    })
-
-    return files
-  }
-
   return (
-    <FlatList<ClowdFile>
-      style={{
-        padding: 10
-      }}
-      numColumns={numColumns}
-      data={sampleFiles}
-      renderItem={({ item }) => (
-        <FileBrowserGridItem
-          title={item.title}
-          type={item.type}
-          onPress={() => {
-            if (item.type === 'folder') {
-              navigation.push('FileBrowser', {
-                folderName: item.title
-              })
-            } else {
-              Share.share(
-                {
-                  url: ''
-                },
-                {
-                  subject: 'title'
-                }
-              )
-            }
-          }}
-        />
-      )}
-      keyExtractor={(item, index) => index.toString()}
-    />
+    <>
+      <StatusBar />
+      <FlatList<ClowdFile>
+        contentContainerStyle={{
+          paddingTop: 50,
+          paddingBottom: 50
+        }}
+        onScroll={e => {
+          // console.log(e.nativeEvent.contentOffset.y)
+        }}
+        style={{
+          padding: 5
+        }}
+        numColumns={numColumns}
+        data={sampleFiles}
+        renderItem={({ item }) => (
+          <FileBrowserGridItem
+            title={item.title}
+            type={item.type}
+            onPress={() => {
+              if (item.type === 'folder') {
+                navigation.push('FileBrowser', {
+                  folderName: item.title
+                })
+              } else {
+                Share.share(
+                  {
+                    url: ''
+                  },
+                  {
+                    subject: 'title'
+                  }
+                )
+              }
+            }}
+          />
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    </>
   )
 }
 
