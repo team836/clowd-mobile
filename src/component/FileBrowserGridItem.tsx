@@ -78,12 +78,11 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
     } else {
       return (
         <TouchableHighlight
-          underlayColor="#f4f5f6"
+          underlayColor="#f0f0f0"
           onPress={() => {
             onPress()
           }}
           onLongPress={() => {
-            console.log('long press')
             ActionSheetIOS.showActionSheetWithOptions(
               {
                 title: 'action sheet',
@@ -105,8 +104,8 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
             <FileIcon type={type} />
             <Text
               style={{
-                fontSize: 15,
-                fontWeight: '400',
+                fontSize: 13,
+                fontWeight: '500',
                 marginTop: 5,
                 alignSelf: 'center'
               }}
