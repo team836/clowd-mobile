@@ -25,8 +25,9 @@ const StatusBar: React.FC = () => {
   return (
     <View
       style={{
+        zIndex: 1,
         // height: clowdStatusBarHeight,
-        backgroundColor: 'rgba(256,256,256,0.7)',
+        backgroundColor: 'rgba(256,256,256,1)',
         borderBottomWidth: 1,
         borderBottomColor: '#f0f0f0'
       }}
@@ -42,7 +43,8 @@ const StatusBar: React.FC = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
           // height: clowdStatusBarHeight - statusBarHeight,
-          backgroundColor: 'transparent'
+          backgroundColor: 'transparent',
+          height: 50
           // top: getStatusBarHeight()
         }}
       >
@@ -95,8 +97,8 @@ const StatusBar: React.FC = () => {
           style={{
             textAlign: 'center',
             fontSize: 17,
-            padding: 10,
-            backgroundColor: '#f4f4f6',
+            height: 40,
+            backgroundColor: '#f0f0f5',
             borderRadius: 10,
             marginBottom: 10
           }}

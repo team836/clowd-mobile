@@ -125,14 +125,13 @@ const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
       <StatusBar />
       <FlatList<ClowdFile>
         contentContainerStyle={{
-          paddingTop: 50,
           paddingBottom: 50
         }}
         onScroll={e => {
           // console.log(e.nativeEvent.contentOffset.y)
         }}
         style={{
-          padding: 5
+          padding: 10
         }}
         numColumns={numColumns}
         data={sampleFiles}

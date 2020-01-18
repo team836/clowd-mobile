@@ -78,7 +78,7 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
     } else {
       return (
         <TouchableHighlight
-          underlayColor="#f0f0f0"
+          underlayColor="#f0f0f5"
           onPress={() => {
             onPress()
           }}
@@ -97,7 +97,7 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
           style={{
             borderRadius: 20,
             flex: 1,
-            padding: 15
+            padding: 12
           }}
         >
           <View>
