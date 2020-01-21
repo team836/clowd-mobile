@@ -95,7 +95,7 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
             )
           }}
           style={{
-            borderRadius: 20,
+            borderRadius: 8,
             flex: 1,
             padding: 12
           }}
