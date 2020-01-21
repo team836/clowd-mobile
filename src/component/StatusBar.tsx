@@ -29,7 +29,7 @@ const StatusBar: React.FC = () => {
         // height: clowdStatusBarHeight,
         backgroundColor: 'rgba(256,256,256,1)',
         borderBottomWidth: 1,
-        borderBottomColor: '#f0f0f0'
+        borderBottomColor: '#e8e8e8'
       }}
     >
       <View
