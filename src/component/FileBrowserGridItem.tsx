@@ -49,6 +49,8 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
       icon = require('../assets/images/png.png')
     } else if (type === 'jpg') {
       icon = require('../assets/images/jpg.png')
+    } else if (type === 'gif') {
+      icon = require('../assets/images/gif.png')
     } else if (type === 'folder') {
       iconStyle = iconStyles.folderIcon
       icon = require('../assets/images/folder.png')
@@ -78,7 +80,7 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
     } else {
       return (
         <TouchableHighlight
-          underlayColor="#f0f0f5"
+          underlayColor="#f0f0f0"
           onPress={() => {
             onPress()
           }}
@@ -97,7 +99,7 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
           style={{
             borderRadius: 8,
             flex: 1,
-            padding: 12
+            padding: 10
           }}
         >
           <View>
@@ -106,8 +108,16 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
               style={{
                 fontSize: 13,
                 fontWeight: '500',
-                marginTop: 5,
-                alignSelf: 'center'
+                marginTop: 3,
+                alignSelf: 'center',
+                color: '#222',
+                // backgroundColor: '#f0f1f3',
+                padding: 3,
+                paddingLeft: 5,
+                paddingRight: 5,
+                textAlign: 'center',
+                overflow: 'hidden',
+                borderRadius: 5
               }}
             >
               {title}
