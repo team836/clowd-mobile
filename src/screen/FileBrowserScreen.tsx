@@ -1,14 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { Share, FlatList, Animated } from 'react-native'
+import { Share, FlatList, Animated, ScrollView } from 'react-native'
 import { RootStackParamList } from '@root/App'
 import FileBrowserGridItem, {
   ClowdFile,
   ClowdFiles
 } from '@src/component/FileBrowserGridItem'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
-import StatusBar from '@src/component/StatusBar'
-import { RouteProp } from '@react-navigation/native'
+import ClowdStatusBar from '@src/component/StatusBar'
+import {
+  RouteProp,
+  useRoute,
+  EventListenerCallback
+} from '@react-navigation/native'
+import { sampleFiles } from '@src/data/sample-files'
+import { BlurView } from 'expo-blur'
+import { ClowdConstants } from '@src/constants'
+import { AppContext } from '@src/context/AppContext'
 
 export type FileBrowserScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -27,114 +35,97 @@ export type FileBrowserScreenParams = {
 const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
   navigation
 }) => {
-  const sampleFiles: ClowdFiles = [
-    {
-      title: 'Folder 1',
-      type: 'folder'
-    },
-    {
-      title: 'Folder 2',
-      type: 'folder'
-    },
-    {
-      title: 'text.txt',
-      type: 'txt'
-    },
-    {
-      title: 'image.png',
-      type: 'png'
-    },
-    {
-      title: 'photo.jpg',
-      type: 'jpg'
-    },
-    {
-      title: 'Folder 3',
-      type: 'folder'
-    },
-    {
-      title: 'wallpaper.png',
-      type: 'png'
-    },
-    {
-      title: 'memo.txt',
-      type: 'txt'
-    },
-    {
-      title: 'wallpaper.png',
-      type: 'png'
-    },
-    {
-      title: 'memo.txt',
-      type: 'txt'
-    },
-    {
-      title: 'wallpaper.png',
-      type: 'png'
-    },
-    {
-      title: 'memo.txt',
-      type: 'txt'
-    },
-    {
-      title: 'wallpaper.png',
-      type: 'png'
-    },
-    {
-      title: 'memo.txt',
-      type: 'txt'
-    },
-    {
-      title: 'wallpaper.png',
-      type: 'png'
-    },
-    {
-      title: 'memo.txt',
-      type: 'txt'
-    },
-    {
-      title: 'wallpaper.png',
-      type: 'png'
-    },
-    {
-      title: 'memo.txt',
-      type: 'txt'
-    },
-    {
-      title: 'wallpaper.png',
-      type: 'png'
-    },
-    {
-      title: 'memo.txt',
-      type: 'txt'
-    }
-  ]
-
   const numColumns = 3
-  const dummyItemsNum = numColumns - (sampleFiles.length % numColumns)
 
-  for (let i = 0; i < dummyItemsNum; i++) {
-    sampleFiles.push({
-      title: '',
-      type: ''
-    })
+  function addDummyItems(items: ClowdFiles) {
+    const dummyItemsNum = numColumns - (items.length % numColumns)
+    const temp = [...items]
+    for (let i = 0; i < dummyItemsNum; i++) {
+      temp.push({
+        title: '',
+        type: ''
+      })
+    }
+    return temp
   }
+
+  const [items, setItems] = useState(addDummyItems(sampleFiles))
+
+  function searchFiles(name: string) {
+    if (name.length === 0) {
+      setItems(addDummyItems(sampleFiles))
+      return
+    }
+
+    const newItems = sampleFiles.filter(item =>
+      item.title.toLocaleLowerCase().includes(name.toLocaleLowerCase())
+    )
+
+    setItems(addDummyItems(newItems))
+  }
+
+  let offset = 0
+  const appContext = useContext(AppContext)
+
+  const route = useRoute<FileBrowserScreenRouteProp>()
+
+  useEffect(() => {
+    appContext.setNavigation(navigation)
+    appContext.setIsNavShrunken(false)
+    let f: EventListenerCallback<'focus', undefined>
+    navigation.addListener(
+      'focus',
+      (f = () => {
+        appContext.setCurrentFolderName(route.params?.folderName || 'Clowd')
+      })
+    )
+
+    return () => {
+      navigation.removeListener('focus', f)
+    }
+  }, [])
 
   return (
     <>
-      <StatusBar />
-      <FlatList<ClowdFile>
+      <Animated.FlatList<ClowdFile>
+        scrollIndicatorInsets={{
+          bottom: ClowdConstants.gaugeHeight,
+          top: ClowdConstants.navHeight - getStatusBarHeight()
+        }}
         contentContainerStyle={{
-          paddingBottom: 50
+          paddingTop: ClowdConstants.navHeight,
+          paddingBottom: ClowdConstants.gaugeHeight + 50
         }}
-        onScroll={e => {
-          // console.log(e.nativeEvent.contentOffset.y)
-        }}
+        onScroll={Animated.event(
+          [
+            {
+              nativeEvent: {
+                contentOffset: {
+                  y: appContext.scrollY
+                }
+              }
+            }
+          ],
+          {
+            useNativeDriver: true
+          }
+        )}
+        // onScroll={e => {
+        //   const currentOffset = e.nativeEvent.contentOffset.y
+        //   console.log(currentOffset)
+
+        //   if (currentOffset > 50) {
+        //     appContext.setIsNavShrunken(true)
+        //   } else {
+        //     appContext.setIsNavShrunken(false)
+        //   }
+        // }}
         style={{
-          padding: 10
+          padding: 5
         }}
         numColumns={numColumns}
-        data={sampleFiles}
+        data={items}
+        extraData={items}
         renderItem={({ item }) => (
           <FileBrowserGridItem
             title={item.title}
@@ -157,7 +148,7 @@ const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
             }}
           />
         )}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item, index) => item.title}
       />
     </>
   )
