@@ -22,7 +22,7 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
-const AppScaffold: React.FC = () => {
+const MainScaffold: React.FC = () => {
   const appContext = useContext(AppContext)
 
   return (
@@ -184,4 +184,4 @@ const AppScaffold: React.FC = () => {
   )
 }
 
-export default AppScaffold
+export default MainScaffold

@@ -1,7 +1,7 @@
 import React from 'react'
 import { enableScreens } from 'react-native-screens'
 import { AppProvider } from '@src/context/AppContext'
-import AppScaffold from '@src/component/AppScaffold'
+import MainScaffold from '@src/component/MainScaffold'
 import * as Google from 'expo-google-app-auth'
 
 enableScreens()
@@ -19,7 +19,7 @@ const App: React.FC = () => {
 
   return (
     <AppProvider>
-      <AppScaffold />
+      <MainScaffold />
     </AppProvider>
   )
 }
