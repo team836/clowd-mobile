@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { Share, FlatList, Animated, ScrollView } from 'react-native'
-import { RootStackParamList } from '@src/component/AppScaffold'
+import { RootStackParamList } from '@src/component/MainScaffold'
 import FileBrowserGridItem, {
   ClowdFile,
   ClowdFiles
