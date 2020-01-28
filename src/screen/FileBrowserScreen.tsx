@@ -17,6 +17,7 @@ import { sampleFiles } from '@src/data/sample-files'
 import { BlurView } from 'expo-blur'
 import { ClowdConstants } from '@src/constants'
 import { AppContext } from '@src/context/AppContext'
+import { getBottomSpace } from 'react-native-iphone-x-helper'
 
 export type FileBrowserScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -119,6 +120,7 @@ const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
         )}
         style={{
           padding: 5,
+          marginBottom: 50 + getBottomSpace(),
         }}
         numColumns={numColumns}
         data={items}
