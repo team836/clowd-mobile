@@ -80,7 +80,7 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
     } else {
       return (
         <TouchableHighlight
-          underlayColor="#f0f0f0"
+          underlayColor="transparent"
           onPress={() => {
             onPress()
           }}
