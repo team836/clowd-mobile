@@ -9,12 +9,6 @@ import {
   TextInput,
   Animated,
 } from 'react-native'
-import {
-  FileBrowserScreenParams,
-  FileBrowserScreenRouteProp,
-  FileBrowserScreenNavigationProp,
-} from '@src/screen/FileBrowserScreen'
-import { RootStackParamList } from '@src/component/MainScaffold'
 import { ClowdConstants } from '@src/constants'
 import { AppContext } from '@src/context/AppContext'
 
