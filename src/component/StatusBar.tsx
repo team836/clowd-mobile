@@ -106,10 +106,9 @@ const ClowdStatusBar: React.FC<StatusBarProps> = ({ onSearch }) => {
             opacity: 1,
             zIndex: 1,
             position: 'absolute',
-            top: -200,
             right: 0,
             left: 0,
-            height: ClowdConstants.navHeight + 200,
+            height: ClowdConstants.navHeight + getStatusBarHeight(),
           }}
         >
           <View

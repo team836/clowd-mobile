@@ -4,14 +4,14 @@ import { Share, FlatList, Animated, ScrollView } from 'react-native'
 import { RootStackParamList } from '@src/component/MainScaffold'
 import FileBrowserGridItem, {
   ClowdFile,
-  ClowdFiles
+  ClowdFiles,
 } from '@src/component/FileBrowserGridItem'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
 import ClowdStatusBar from '@src/component/StatusBar'
 import {
   RouteProp,
   useRoute,
-  EventListenerCallback
+  EventListenerCallback,
 } from '@react-navigation/native'
 import { sampleFiles } from '@src/data/sample-files'
 import { BlurView } from 'expo-blur'
@@ -33,7 +33,7 @@ export type FileBrowserScreenParams = {
 }
 
 const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
-  navigation
+  navigation,
 }) => {
   const numColumns = 3
 
@@ -43,7 +43,7 @@ const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
     for (let i = 0; i < dummyItemsNum; i++) {
       temp.push({
         title: '',
-        type: ''
+        type: '',
       })
     }
     return temp
@@ -75,7 +75,7 @@ const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
     console.log('screen loaded', appContext.scrollY)
     const navAnimation = Animated.timing(appContext.scrollY, {
       toValue: 0,
-      duration: 300
+      duration: 300,
     })
     navAnimation.start()
 
@@ -97,28 +97,28 @@ const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
       <Animated.FlatList<ClowdFile>
         scrollIndicatorInsets={{
           bottom: ClowdConstants.gaugeHeight,
-          top: ClowdConstants.navHeight - getStatusBarHeight()
+          top: ClowdConstants.navHeight - getStatusBarHeight(),
         }}
         contentContainerStyle={{
-          paddingTop: ClowdConstants.navHeight,
-          paddingBottom: ClowdConstants.gaugeHeight + 50
+          paddingTop: ClowdConstants.navHeight + getStatusBarHeight(),
+          paddingBottom: ClowdConstants.gaugeHeight + 50,
         }}
         onScroll={Animated.event(
           [
             {
               nativeEvent: {
                 contentOffset: {
-                  y: appContext.scrollY
-                }
-              }
-            }
+                  y: appContext.scrollY,
+                },
+              },
+            },
           ],
           {
-            useNativeDriver: false
+            useNativeDriver: false,
           }
         )}
         style={{
-          padding: 5
+          padding: 5,
         }}
         numColumns={numColumns}
         data={items}
@@ -130,15 +130,15 @@ const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
             onPress={() => {
               if (item.type === 'folder') {
                 navigation.push('FileBrowser', {
-                  folderName: item.title
+                  folderName: item.title,
                 })
               } else {
                 Share.share(
                   {
-                    url: ''
+                    url: '',
                   },
                   {
-                    subject: 'title'
+                    subject: 'title',
                   }
                 )
               }

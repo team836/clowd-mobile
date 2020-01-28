@@ -5,7 +5,7 @@ import {
   TouchableHighlight,
   Image,
   StyleSheet,
-  ActionSheetIOS
+  ActionSheetIOS,
 } from 'react-native'
 
 export type ClowdFile = {
@@ -24,7 +24,7 @@ type FileBrowserGridItemProps = {
 const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
   title,
   type,
-  onPress
+  onPress,
 }) => {
   const folderIconSize = 90
   function FileIcon({ type }) {
@@ -33,13 +33,13 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
       folderIcon: {
         alignSelf: 'center',
         width: folderIconSize,
-        height: folderIconSize
+        height: folderIconSize,
       },
       fileIcon: {
         alignSelf: 'center',
         width: folderIconSize / 1.3,
-        height: folderIconSize
-      }
+        height: folderIconSize,
+      },
     })
     let iconStyle = iconStyles.fileIcon
 
@@ -73,7 +73,7 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
           style={{
             flex: 1,
             alignItems: 'center',
-            padding: 10
+            padding: 10,
           }}
         />
       )
@@ -89,7 +89,7 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
               {
                 title: 'action sheet',
                 options: ['Move', 'Delete', 'Cancel'],
-                cancelButtonIndex: 2
+                cancelButtonIndex: 2,
               },
               buttonIndex => {
                 console.log(buttonIndex)
@@ -99,7 +99,8 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
           style={{
             borderRadius: 8,
             flex: 1,
-            padding: 10
+            padding: 10,
+            marginBottom: 10,
           }}
         >
           <View>
@@ -117,7 +118,7 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
                 paddingRight: 5,
                 textAlign: 'center',
                 overflow: 'hidden',
-                borderRadius: 5
+                borderRadius: 5,
               }}
             >
               {title}
@@ -134,5 +135,5 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
 export default FileBrowserGridItem
 
 const style = StyleSheet.create({
-  itemIcon: {}
+  itemIcon: {},
 })
