@@ -10,6 +10,7 @@ interface AppContextProps {
   navigation: any
   setNavigation: React.Dispatch<any>
   scrollY: Animated.Value
+  setScrollY: React.Dispatch<Animated.Value>
 }
 
 export const AppContext = createContext({} as AppContextProps)
@@ -18,7 +19,7 @@ export const AppProvider: React.FC = ({ children }) => {
   const [isNavShrunken, setIsNavShrunken] = useState(false)
   const [currentFolderName, setCurrentFolderName] = useState('Clowd')
   const [navigation, setNavigation] = useState(null)
-  const [scrollY] = useState(new Animated.Value(0))
+  const [scrollY, setScrollY] = useState(new Animated.Value(0))
 
   return (
     <AppContext.Provider
@@ -29,7 +30,8 @@ export const AppProvider: React.FC = ({ children }) => {
         setCurrentFolderName,
         navigation,
         setNavigation,
-        scrollY
+        scrollY,
+        setScrollY
       }}
     >
       {children}

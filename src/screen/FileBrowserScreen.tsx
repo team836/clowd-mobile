@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { Share, FlatList, Animated, ScrollView } from 'react-native'
-import { RootStackParamList } from '@root/App'
+import { RootStackParamList } from '@src/component/AppScaffold'
 import FileBrowserGridItem, {
   ClowdFile,
   ClowdFiles
@@ -72,6 +72,13 @@ const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
   useEffect(() => {
     appContext.setNavigation(navigation)
     appContext.setIsNavShrunken(false)
+    console.log('screen loaded', appContext.scrollY)
+    const navAnimation = Animated.timing(appContext.scrollY, {
+      toValue: 0,
+      duration: 300
+    })
+    navAnimation.start()
+
     let f: EventListenerCallback<'focus', undefined>
     navigation.addListener(
       'focus',
@@ -107,19 +114,9 @@ const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
             }
           ],
           {
-            useNativeDriver: true
+            useNativeDriver: false
           }
         )}
-        // onScroll={e => {
-        //   const currentOffset = e.nativeEvent.contentOffset.y
-        //   console.log(currentOffset)
-
-        //   if (currentOffset > 50) {
-        //     appContext.setIsNavShrunken(true)
-        //   } else {
-        //     appContext.setIsNavShrunken(false)
-        //   }
-        // }}
         style={{
           padding: 5
         }}
