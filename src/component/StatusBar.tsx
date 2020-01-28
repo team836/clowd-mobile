@@ -7,14 +7,14 @@ import {
   TouchableHighlight,
   Image,
   TextInput,
-  Animated
+  Animated,
 } from 'react-native'
 import {
   FileBrowserScreenParams,
   FileBrowserScreenRouteProp,
-  FileBrowserScreenNavigationProp
+  FileBrowserScreenNavigationProp,
 } from '@src/screen/FileBrowserScreen'
-import { RootStackParamList } from '@src/component/AppScaffold'
+import { RootStackParamList } from '@src/component/MainScaffold'
 import { ClowdConstants } from '@src/constants'
 import { AppContext } from '@src/context/AppContext'
 
@@ -36,19 +36,19 @@ const ClowdStatusBar: React.FC<StatusBarProps> = ({ onSearch }) => {
 
   const navShrinkAnimation = Animated.timing(clowdNavHeight, {
     toValue: getStatusBarHeight() + 50,
-    duration: 200
+    duration: 200,
   })
   const navExpandAnimation = Animated.timing(clowdNavHeight, {
     toValue: ClowdConstants.navHeight,
-    duration: 200
+    duration: 200,
   })
   const searchBarShrinkAnimation = Animated.timing(searchBarHeight, {
     toValue: 0,
-    duration: 200
+    duration: 200,
   })
   const searchBarExpandAnimation = Animated.timing(searchBarHeight, {
     toValue: 40,
-    duration: 200
+    duration: 200,
   })
 
   useEffect(() => {
@@ -84,7 +84,7 @@ const ClowdStatusBar: React.FC<StatusBarProps> = ({ onSearch }) => {
         top: 0,
         right: 0,
         left: 0,
-        height: ClowdConstants.navHeight
+        height: ClowdConstants.navHeight,
       }}
     >
       <Animated.View
@@ -109,7 +109,7 @@ const ClowdStatusBar: React.FC<StatusBarProps> = ({ onSearch }) => {
             top: -200,
             right: 0,
             left: 0,
-            height: ClowdConstants.navHeight + 200
+            height: ClowdConstants.navHeight + 200,
           }}
         >
           <View
@@ -120,8 +120,8 @@ const ClowdStatusBar: React.FC<StatusBarProps> = ({ onSearch }) => {
               right: 0,
               bottom: 0,
               left: 0,
-              backgroundColor: '#f0f1f3',
-              opacity: 0.7
+              backgroundColor: '#fff',
+              opacity: 0.7,
               // borderBottomColor: '#e0e0e0',
               // borderBottomWidth: 1
             }}
@@ -130,7 +130,7 @@ const ClowdStatusBar: React.FC<StatusBarProps> = ({ onSearch }) => {
       </Animated.View>
       <View
         style={{
-          height: getStatusBarHeight()
+          height: getStatusBarHeight(),
         }}
       />
       <View
@@ -141,7 +141,7 @@ const ClowdStatusBar: React.FC<StatusBarProps> = ({ onSearch }) => {
           // height: clowdStatusBarHeight - statusBarHeight,
           backgroundColor: 'transparent',
           height: 50,
-          zIndex: 2
+          zIndex: 2,
           // top: getStatusBarHeight()
         }}
       >
@@ -151,7 +151,7 @@ const ClowdStatusBar: React.FC<StatusBarProps> = ({ onSearch }) => {
             width: 70,
             height: 50,
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
           underlayColor={'transparent'}
           onPress={() => {
@@ -166,7 +166,7 @@ const ClowdStatusBar: React.FC<StatusBarProps> = ({ onSearch }) => {
             source={require('@src/assets/images/go-back-arrow.png')}
             style={{
               width: 20,
-              resizeMode: 'contain'
+              resizeMode: 'contain',
             }}
           />
         </TouchableHighlight>
@@ -174,14 +174,14 @@ const ClowdStatusBar: React.FC<StatusBarProps> = ({ onSearch }) => {
           style={{
             fontSize: 20,
             fontWeight: '600',
-            color: '#000'
+            color: '#000',
           }}
         >
           {appContext.currentFolderName}
         </Text>
         <View
           style={{
-            width: 70
+            width: 70,
           }}
         ></View>
       </View>
@@ -190,12 +190,12 @@ const ClowdStatusBar: React.FC<StatusBarProps> = ({ onSearch }) => {
         style={{
           paddingLeft: 20,
           paddingRight: 20,
-          zIndex: 2
+          zIndex: 2,
         }}
       >
         <Animated.View
           style={{
-            height: 40
+            height: 40,
             // transform: [
             //   {
             //     translateY: appContext.scrollY.interpolate({
@@ -221,8 +221,8 @@ const ClowdStatusBar: React.FC<StatusBarProps> = ({ onSearch }) => {
               shadowOpacity: 0.15,
               shadowOffset: {
                 width: 0,
-                height: 3
-              }
+                height: 3,
+              },
             }}
           >
             <TextInput
@@ -230,7 +230,7 @@ const ClowdStatusBar: React.FC<StatusBarProps> = ({ onSearch }) => {
                 color: '#000',
                 textAlign: 'center',
                 fontSize: 17,
-                height: '100%'
+                height: '100%',
               }}
               placeholder="Search files"
               placeholderTextColor="#808080"
