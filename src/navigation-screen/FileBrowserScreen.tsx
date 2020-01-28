@@ -98,11 +98,11 @@ const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
       <Animated.FlatList<ClowdFile>
         scrollIndicatorInsets={{
           bottom: ClowdConstants.gaugeHeight,
-          top: ClowdConstants.navHeight - getStatusBarHeight(),
+          top: ClowdConstants.navHeight,
         }}
         contentContainerStyle={{
           paddingTop: ClowdConstants.navHeight + getStatusBarHeight(),
-          paddingBottom: ClowdConstants.gaugeHeight + 50,
+          paddingBottom: ClowdConstants.gaugeHeight + 120 + getBottomSpace(),
         }}
         onScroll={Animated.event(
           [
@@ -120,7 +120,6 @@ const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
         )}
         style={{
           padding: 5,
-          marginBottom: 50 + getBottomSpace(),
         }}
         numColumns={numColumns}
         data={items}
