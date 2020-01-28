@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import { NavigationNativeContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import FileBrowserScreen from '@src/screen/FileBrowserScreen'
+import FileBrowserScreen from '@src/navigation-screen/FileBrowserScreen'
 import * as DocumentPicker from 'expo-document-picker'
 import { ClowdConstants } from '@src/constants'
 import { BlurView } from 'expo-blur'
