@@ -5,16 +5,17 @@ import {
   TouchableHighlight,
   ActionSheetIOS,
   Image,
-  Text
+  Text,
 } from 'react-native'
 import { NavigationNativeContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import FileBrowserScreen from '@src/screen/FileBrowserScreen'
+import FileBrowserScreen from '@src/navigation-screen/FileBrowserScreen'
 import * as DocumentPicker from 'expo-document-picker'
 import { ClowdConstants } from '@src/constants'
 import { BlurView } from 'expo-blur'
 import ClowdStatusBar from './StatusBar'
 import { AppContext } from '@src/context/AppContext'
+import { getBottomSpace } from 'react-native-iphone-x-helper'
 
 export type RootStackParamList = {
   FileBrowser: { folderName: string; files?: Array<any> } | undefined
@@ -33,7 +34,7 @@ const MainScaffold: React.FC = () => {
         top: 0,
         right: 0,
         bottom: 0,
-        left: 0
+        left: 0,
       }}
     >
       <StatusBar barStyle="dark-content" />
@@ -47,8 +48,8 @@ const MainScaffold: React.FC = () => {
             headerShown: false,
             headerLargeTitle: true,
             contentStyle: {
-              backgroundColor: '#fff'
-            }
+              backgroundColor: '#fff',
+            },
           }}
         >
           <Stack.Screen name="FileBrowser" component={FileBrowserScreen} />
@@ -60,7 +61,7 @@ const MainScaffold: React.FC = () => {
                 title: '+',
                 message: 'Create a new folder or upload a file',
                 options: ['Folder', 'Browse', 'Photo', 'Cancel'],
-                cancelButtonIndex: 3
+                cancelButtonIndex: 3,
               },
               async index => {
                 console.log(index)
@@ -78,17 +79,17 @@ const MainScaffold: React.FC = () => {
             height: 65,
             position: 'absolute',
             right: 30,
-            bottom: 70,
+            bottom: 70 + getBottomSpace(),
             borderRadius: 50,
             shadowColor: '#000',
             shadowOpacity: 0.2,
             shadowOffset: {
               width: 0,
-              height: 10
+              height: 10,
             },
             shadowRadius: 30,
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
           underlayColor="#fff"
         >
@@ -96,7 +97,7 @@ const MainScaffold: React.FC = () => {
             source={require('@src/assets/images/plus.png')}
             style={{
               width: 25,
-              height: 25
+              height: 25,
             }}
           />
         </TouchableHighlight>
@@ -110,9 +111,9 @@ const MainScaffold: React.FC = () => {
           right: 0,
           bottom: 0,
           left: 0,
-          height: ClowdConstants.gaugeHeight,
+          height: ClowdConstants.gaugeHeight + getBottomSpace(),
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'flex-start',
         }}
       >
         <View
@@ -125,7 +126,7 @@ const MainScaffold: React.FC = () => {
             bottom: 0,
             left: 0,
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
         ></View>
         <View
@@ -133,7 +134,8 @@ const MainScaffold: React.FC = () => {
             flexDirection: 'row',
             alignItems: 'center',
             paddingLeft: 20,
-            paddingRight: 20
+            paddingRight: 20,
+            height: ClowdConstants.gaugeHeight,
           }}
         >
           <View
@@ -144,14 +146,14 @@ const MainScaffold: React.FC = () => {
               position: 'relative',
               backgroundColor: '#fff',
               overflow: 'hidden',
-              justifyContent: 'flex-start'
+              justifyContent: 'flex-start',
             }}
           >
             <View
               style={{
                 backgroundColor: '#0E85F3',
                 height: '100%',
-                width: '67%'
+                width: '67%',
               }}
             ></View>
           </View>
@@ -159,12 +161,12 @@ const MainScaffold: React.FC = () => {
             style={{
               marginLeft: 20,
               flexDirection: 'row',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
             <Text
               style={{
-                fontSize: 13
+                fontSize: 13,
               }}
             >
               20GB /{' '}
@@ -172,7 +174,7 @@ const MainScaffold: React.FC = () => {
             <Text
               style={{
                 fontWeight: '700',
-                fontSize: 13
+                fontSize: 13,
               }}
             >
               30GB

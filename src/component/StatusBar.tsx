@@ -9,12 +9,6 @@ import {
   TextInput,
   Animated,
 } from 'react-native'
-import {
-  FileBrowserScreenParams,
-  FileBrowserScreenRouteProp,
-  FileBrowserScreenNavigationProp,
-} from '@src/screen/FileBrowserScreen'
-import { RootStackParamList } from '@src/component/MainScaffold'
 import { ClowdConstants } from '@src/constants'
 import { AppContext } from '@src/context/AppContext'
 
@@ -106,10 +100,9 @@ const ClowdStatusBar: React.FC<StatusBarProps> = ({ onSearch }) => {
             opacity: 1,
             zIndex: 1,
             position: 'absolute',
-            top: -200,
             right: 0,
             left: 0,
-            height: ClowdConstants.navHeight + 200,
+            height: ClowdConstants.navHeight + getStatusBarHeight(),
           }}
         >
           <View
