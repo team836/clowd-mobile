@@ -22,26 +22,31 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'black',
     alignItems: 'center',
+    justifyContent: 'center',
   },
 
   clowdLogoImage: {
-    height: '100%',
-    width: '120%',
+
+    height: '50%',
+    width: '70%',
     alignItems: 'center',
   },
 
   buttonLayout: {
     flex: 1,
     padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: 'black',
   },
 
   button: {
     position: 'relative',
-    height: '100%',
+    width: '100%',
+    height: '55%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'white',
+    borderRadius: 20
   },
 
   buttonGoogleLogo_TextLayout: {
@@ -57,13 +62,14 @@ const styles = StyleSheet.create({
   },
 
   buttonGoogleLogoImage: {
-    width: 50,
-    height: 50,
+    width: 30,
+    height: 30,
   },
 
   buttonGoogleLogoText: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: '500'
+    //fontWeight: 'bold',
   },
 })
 
@@ -84,6 +90,7 @@ function LogInButton() {
       <TouchableOpacity
         style={styles.button}
         onPress={() => Alert.alert('send API')}
+        activeOpacity={0.7}
       >
         <View style={styles.buttonGoogleLogo_TextLayout}>
           <Image
@@ -92,7 +99,7 @@ function LogInButton() {
             style={styles.buttonGoogleLogoImage}
             source={require('@src/assets/images/Google-logo.png')}
           />
-          <Text style={styles.buttonGoogleLogoText}>Sign in with Google</Text>
+          <Text style={styles.buttonGoogleLogoText}>  Sign in with Google</Text>
         </View>
       </TouchableOpacity>
     </View>
