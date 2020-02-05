@@ -1,9 +1,8 @@
 import React from 'react'
 import { enableScreens } from 'react-native-screens'
 import { AppProvider } from '@src/context/AppContext'
-import MainScaffold from '@src/component/MainScaffold'
 import * as Google from 'expo-google-app-auth'
-import StartScreen from '@src/screen/StartScreen'
+import ScreenManager from '@src/screen/ScreenManager'
 
 enableScreens()
 
@@ -20,8 +19,7 @@ const App: React.FC = () => {
 
   return (
     <AppProvider>
-      {/*<MainScaffold />*/}
-      <StartScreen />
+      <ScreenManager />
     </AppProvider>
   )
 }
