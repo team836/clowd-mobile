@@ -10,7 +10,9 @@ interface AppContextProps {
   navigation: any
   setNavigation: React.Dispatch<any>
   scrollY: Animated.Value
-  setScrollY: React.Dispatch<Animated.Value>
+  setScrollY: React.Dispatch<React.SetStateAction<Animated.Value>>
+  isSignedIn: boolean
+  setIsSignedIn: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const AppContext = createContext({} as AppContextProps)
@@ -20,6 +22,7 @@ export const AppProvider: React.FC = ({ children }) => {
   const [currentFolderName, setCurrentFolderName] = useState('Clowd')
   const [navigation, setNavigation] = useState(null)
   const [scrollY, setScrollY] = useState(new Animated.Value(0))
+  const [isSignedIn, setIsSignedIn] = useState(false)
 
   return (
     <AppContext.Provider
@@ -31,7 +34,9 @@ export const AppProvider: React.FC = ({ children }) => {
         navigation,
         setNavigation,
         scrollY,
-        setScrollY
+        setScrollY,
+        isSignedIn,
+        setIsSignedIn,
       }}
     >
       {children}

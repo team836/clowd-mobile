@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useContext } from 'react'
 import {
   Text,
   View,
@@ -7,7 +7,10 @@ import {
   Button,
   Alert,
   TouchableOpacity,
+  StatusBar,
 } from 'react-native'
+import { getBottomSpace } from 'react-native-iphone-x-helper'
+import { AppContext } from '@src/context/AppContext'
 
 const styles = StyleSheet.create({
   mainLayout: {
@@ -26,7 +29,6 @@ const styles = StyleSheet.create({
   },
 
   clowdLogoImage: {
-
     height: '50%',
     width: '70%',
     alignItems: 'center',
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
-    borderRadius: 20
+    borderRadius: 15,
   },
 
   buttonGoogleLogo_TextLayout: {
@@ -62,13 +64,14 @@ const styles = StyleSheet.create({
   },
 
   buttonGoogleLogoImage: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
+    marginRight: 5,
   },
 
   buttonGoogleLogoText: {
-    fontSize: 20,
-    fontWeight: '500'
+    fontSize: 17,
+    fontWeight: '400',
     //fontWeight: 'bold',
   },
 })
@@ -85,11 +88,15 @@ function ClowdLogo() {
 }
 
 function LogInButton() {
+  const appContext = useContext(AppContext)
+
   return (
     <View style={styles.buttonLayout}>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => Alert.alert('send API')}
+        onPress={() => {
+          appContext.setIsSignedIn(true)
+        }}
         activeOpacity={0.7}
       >
         <View style={styles.buttonGoogleLogo_TextLayout}>
@@ -99,20 +106,21 @@ function LogInButton() {
             style={styles.buttonGoogleLogoImage}
             source={require('@src/assets/images/Google-logo.png')}
           />
-          <Text style={styles.buttonGoogleLogoText}>  Sign in with Google</Text>
+          <Text style={styles.buttonGoogleLogoText}> Sign in with Google</Text>
         </View>
       </TouchableOpacity>
     </View>
   )
 }
 
-export default class mainLayout extends Component {
-  render() {
-    return (
-      <View style={styles.mainLayout}>
-        <ClowdLogo />
-        <LogInButton />
-      </View>
-    )
-  }
+const StartScreen: React.FC = () => {
+  return (
+    <View style={styles.mainLayout}>
+      <StatusBar hidden={true} />
+      <ClowdLogo />
+      <LogInButton />
+    </View>
+  )
 }
+
+export default StartScreen
