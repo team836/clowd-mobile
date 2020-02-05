@@ -6,16 +6,21 @@ import {
   ActionSheetIOS,
   Image,
   Text,
+  TouchableOpacity,
 } from 'react-native'
 import { NavigationNativeContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import FileBrowserScreen from '@src/navigation-screen/FileBrowserScreen'
 import * as DocumentPicker from 'expo-document-picker'
+import * as ImagePicker from 'expo-image-picker'
+import * as FileSystem from 'expo-file-system'
+import * as Device from 'expo-device'
 import { ClowdConstants } from '@src/constants'
 import { BlurView } from 'expo-blur'
 import ClowdStatusBar from './StatusBar'
 import { AppContext } from '@src/context/AppContext'
 import { getBottomSpace } from 'react-native-iphone-x-helper'
+import CryptoJS from 'crypto-js'
 
 export type RootStackParamList = {
   FileBrowser: { folderName: string; files?: Array<any> } | undefined
@@ -54,21 +59,37 @@ const MainScaffold: React.FC = () => {
         >
           <Stack.Screen name="FileBrowser" component={FileBrowserScreen} />
         </Stack.Navigator>
-        <TouchableHighlight
+        <TouchableOpacity
           onPress={() => {
             ActionSheetIOS.showActionSheetWithOptions(
               {
-                title: '+',
-                message: 'Create a new folder or upload a file',
-                options: ['Folder', 'Browse', 'Photo', 'Cancel'],
+                title: 'Create a new folder or upload a file',
+                options: [
+                  'Create a Folder',
+                  'Browse Files',
+                  'Photo Album',
+                  'Cancel',
+                ],
                 cancelButtonIndex: 3,
               },
               async index => {
-                console.log(index)
                 if (index === 0) {
-                  let result = await DocumentPicker.getDocumentAsync()
                 } else if (index === 1) {
-                  // TODO: ImagePicker
+                  const result = await DocumentPicker.getDocumentAsync()
+                } else if (index === 2) {
+                  const result = await ImagePicker.launchImageLibraryAsync()
+                  if (result.cancelled === false) {
+                    const file = await FileSystem.readAsStringAsync(
+                      result.uri,
+                      {
+                        encoding: 'base64',
+                      }
+                    )
+                    const splittedPieces = file.match(/.{1,10485760}/g)
+                    const encryptedPieces = splittedPieces.map(piece =>
+                      CryptoJS.AES.encrypt(piece, 'clowd836')
+                    )
+                  }
                 }
               }
             )
@@ -91,7 +112,7 @@ const MainScaffold: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
           }}
-          underlayColor="#fff"
+          activeOpacity={1}
         >
           <Image
             source={require('@src/assets/images/plus.png')}
@@ -100,7 +121,7 @@ const MainScaffold: React.FC = () => {
               height: 25,
             }}
           />
-        </TouchableHighlight>
+        </TouchableOpacity>
       </NavigationNativeContainer>
       <ClowdStatusBar onSearch={() => {}} />
       <BlurView
