@@ -10,5 +10,8 @@ npm-debug.*
 web-build/
 web-report/
 
+#Phpstorm
+.idea
+
 # macOS
 .DS_Store
