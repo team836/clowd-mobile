@@ -43,11 +43,7 @@ const MainScaffold: React.FC = () => {
       }}
     >
       <StatusBar barStyle="dark-content" />
-      <NavigationNativeContainer
-        onStateChange={e => {
-          console.log(e.key)
-        }}
-      >
+      <NavigationNativeContainer>
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
