@@ -23,7 +23,7 @@ import { getBottomSpace } from 'react-native-iphone-x-helper'
 import CryptoJS from 'crypto-js'
 
 export type RootStackParamList = {
-  FileBrowser: { folderName: string; files?: Array<any> } | undefined
+  FileBrowser: { folderName: string; pathName: string } | undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
