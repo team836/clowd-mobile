@@ -72,26 +72,34 @@ const FileBrowserScreen: React.FC<FileBrowserScreenParams> = ({
 
     setItems(
       addDummyItems(
-        thisInfo.map(info => {
-          const regExp = new RegExp(`${pathName}.*?[\.\/]`)
-          const matched = info.path.match(regExp)
-          let type = 'folder'
-          let title = ''
-          if (matched[0].endsWith('.')) {
-            type = info.path.replace(matched[0], '')
-            const splitted = info.path.split('/')
-            title = splitted[splitted.length - 1]
-          } else if (matched[0].endsWith('/')) {
-            // Folder
-            const splitted = matched[0].split('/')
-            title = splitted[splitted.length - 2]
-            type = 'folder'
-          }
-          return {
-            title,
-            type,
-          }
-        })
+        thisInfo
+          .map(info => {
+            const regExp = new RegExp(`${pathName}.*?[\.\/]`)
+            const matched = info.path.match(regExp)
+            let type = 'folder'
+            let title = ''
+            if (matched[0].endsWith('.')) {
+              type = info.path.replace(matched[0], '')
+              const splitted = info.path.split('/')
+              title = splitted[splitted.length - 1]
+            } else if (matched[0].endsWith('/')) {
+              // Folder
+              const splitted = matched[0].split('/')
+              title = splitted[splitted.length - 2]
+              type = 'folder'
+            }
+            return {
+              title,
+              type,
+            }
+          })
+          .filter((item, pos, self) => {
+            return (
+              self.findIndex(a => {
+                return a.title === item.title && a.type === item.type
+              }) === pos
+            )
+          })
       )
     )
 
