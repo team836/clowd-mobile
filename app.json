@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "clowd",
     "name": "clowd-mobile",
     "slug": "clowd-mobile",
     "privacy": "public",
@@ -19,7 +20,8 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "xyz.clowd.clowd-mobile"
     }
   }
 }
