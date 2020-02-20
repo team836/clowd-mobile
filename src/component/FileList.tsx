@@ -131,24 +131,7 @@ const FileList: React.FC<FileBrowserStackScreenParams> = ({ navigation }) => {
             title={item.title}
             type={item.type}
             size={item.size}
-            onPress={() => {
-              if (item.type === 'folder') {
-                navigation.push('FileList', {
-                  title: item.title,
-                  folderName: item.title,
-                  pathName: pathName + item.title + '/',
-                })
-              } else {
-                Share.share(
-                  {
-                    url: '',
-                  },
-                  {
-                    subject: 'title',
-                  }
-                )
-              }
-            }}
+            navigation={navigation}
           />
         )}
         keyExtractor={item => item.size + item.title}

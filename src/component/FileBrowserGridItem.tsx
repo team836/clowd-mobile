@@ -8,8 +8,10 @@ import {
   StyleSheet,
   ActionSheetIOS,
   Alert,
+  Share,
 } from 'react-native'
 import { AppContext } from '@src/context/AppContext'
+import { FileBrowserStackScreenNavigationProp } from '@src/screen/FileBrowserStackScreen'
 
 export type ClowdFile = {
   title: string
@@ -23,14 +25,14 @@ type FileBrowserGridItemProps = {
   title: string
   type: string
   size: number
-  onPress: Function
+  navigation: FileBrowserStackScreenNavigationProp
 }
 
 const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
   title,
   type,
   size,
-  onPress,
+  navigation,
 }) => {
   const appContext = useContext(AppContext)
   const folderIconSize = 90
@@ -91,7 +93,18 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => {
-            onPress()
+            if (type === 'folder') {
+              navigation.push('FileList', {
+                title: title,
+                folderName: title,
+                pathName: appContext.currentPathName + title + '/',
+              })
+            } else {
+              Share.share({
+                url: '',
+                title,
+              })
+            }
           }}
           onLongPress={() => {
             ActionSheetIOS.showActionSheetWithOptions(
