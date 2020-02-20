@@ -70,7 +70,7 @@ const AddButton: React.FC = () => {
               const encryptedPieces = splitAndEcryptFile(file)
               encryptedPieces.forEach((encryptedPiece, i) => {
                 axios({
-                  url: 'https://dev.clowd.xyz/v1/client/file',
+                  url: 'https://clowd.xyz/v1/client/file',
                   method: 'post',
                   data: [
                     {
@@ -97,7 +97,7 @@ const AddButton: React.FC = () => {
         height: 65,
         position: 'absolute',
         right: 30,
-        bottom: 70 + getBottomSpace(),
+        bottom: 70,
         borderRadius: 50,
         shadowColor: '#000',
         shadowOpacity: 0.2,
