@@ -11,6 +11,10 @@ import {
 } from 'react-native'
 import { getBottomSpace } from 'react-native-iphone-x-helper'
 import { AppContext } from '@src/context/AppContext'
+import * as WebBrowser from 'expo-web-browser'
+import { Linking } from 'expo'
+import * as SecureStore from 'expo-secure-store'
+import { RootStackParams, RootStackNavigationProp } from '@root/App'
 
 const styles = StyleSheet.create({
   mainLayout: {
@@ -87,15 +91,27 @@ function ClowdLogo() {
   )
 }
 
-function LogInButton() {
+type LogInButtonProps = {
+  navigation: RootStackNavigationProp
+}
+const LogInButton: React.FC<LogInButtonProps> = ({ navigation }) => {
   const appContext = useContext(AppContext)
 
   return (
     <View style={styles.buttonLayout}>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => {
-          appContext.setIsSignedIn(true)
+        onPress={async () => {
+          const deepLink = Linking.makeUrl()
+          try {
+            const result = await WebBrowser.openBrowserAsync(
+              // 'https://dev.api.clowd.xyz/v1/auth/login'
+              'https://dev.api.clowd.xyz/v1/auth/clowdee/login'
+            )
+          } catch (error) {
+            console.error(error)
+          }
+          // navigation.popToTop()
         }}
         activeOpacity={0.7}
       >
@@ -113,12 +129,29 @@ function LogInButton() {
   )
 }
 
-const StartScreen: React.FC = () => {
+const StartScreen: React.FC<RootStackParams> = ({ navigation }) => {
+  Linking.addEventListener('url', async e => {
+    const url = e.url
+    let { path, queryParams } = Linking.parse(url)
+    const { accessToken, refreshToken } = queryParams
+    console.log(`accessToken: ${accessToken}`)
+    console.log(`refreshToken: ${refreshToken}`)
+    WebBrowser.dismissBrowser()
+    if (!accessToken || !refreshToken) {
+      console.log('wrong tokens')
+      Alert.alert('Sign Up Fails')
+    } else {
+      await SecureStore.setItemAsync('accessToken', accessToken)
+      await SecureStore.setItemAsync('refreshToken', refreshToken)
+      navigation.popToTop()
+    }
+  })
+
   return (
     <View style={styles.mainLayout}>
       <StatusBar hidden={true} />
       <ClowdLogo />
-      <LogInButton />
+      <LogInButton navigation={navigation} />
     </View>
   )
 }

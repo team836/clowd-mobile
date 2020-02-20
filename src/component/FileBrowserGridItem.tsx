@@ -1,16 +1,20 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
   View,
   Text,
   TouchableHighlight,
+  TouchableOpacity,
   Image,
   StyleSheet,
   ActionSheetIOS,
+  Alert,
 } from 'react-native'
+import { AppContext } from '@src/context/AppContext'
 
 export type ClowdFile = {
   title: string
   type: string
+  size: number
 }
 
 export type ClowdFiles = ClowdFile[]
@@ -18,14 +22,17 @@ export type ClowdFiles = ClowdFile[]
 type FileBrowserGridItemProps = {
   title: string
   type: string
+  size: number
   onPress: Function
 }
 
 const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
   title,
   type,
+  size,
   onPress,
 }) => {
+  const appContext = useContext(AppContext)
   const folderIconSize = 90
   function FileIcon({ type }) {
     let icon = require('../assets/images/folder.png')
@@ -43,15 +50,17 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
     })
     let iconStyle = iconStyles.fileIcon
 
-    if (type === 'txt') {
+    const universalType = type.toLowerCase()
+
+    if (universalType === 'txt') {
       icon = require('../assets/images/txt.png')
-    } else if (type === 'png') {
+    } else if (universalType === 'png') {
       icon = require('../assets/images/png.png')
-    } else if (type === 'jpg') {
+    } else if (universalType === 'jpg' || universalType === 'jpeg') {
       icon = require('../assets/images/jpg.png')
-    } else if (type === 'gif') {
+    } else if (universalType === 'gif') {
       icon = require('../assets/images/gif.png')
-    } else if (type === 'folder') {
+    } else if (universalType === 'folder') {
       iconStyle = iconStyles.folderIcon
       icon = require('../assets/images/folder.png')
     }
@@ -79,20 +88,52 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
       )
     } else {
       return (
-        <TouchableHighlight
-          underlayColor="transparent"
+        <TouchableOpacity
+          activeOpacity={1}
           onPress={() => {
             onPress()
           }}
           onLongPress={() => {
             ActionSheetIOS.showActionSheetWithOptions(
               {
-                title: 'action sheet',
+                tintColor: '#000',
+                title: 'Manipulate a file',
                 options: ['Move', 'Delete', 'Cancel'],
                 cancelButtonIndex: 2,
               },
               buttonIndex => {
-                console.log(buttonIndex)
+                const pathName = appContext.currentPathName
+                const regExp = new RegExp(`${pathName}.*?[\.\/]`)
+                const folders = appContext.fileInfo
+                  .filter(file => {
+                    const matched = file.path.match(regExp)
+                    return matched && matched[0].endsWith('/')
+                  })
+                  .map(file => {
+                    const matched = file.path.match(regExp)
+                    const splitted = matched[0].split('/')
+                    title = splitted[splitted.length - 2]
+                    return title
+                  })
+                  .filter((item, pos, self) => {
+                    return (
+                      self.findIndex(a => {
+                        return a === item
+                      }) === pos
+                    )
+                  })
+
+                ActionSheetIOS.showActionSheetWithOptions(
+                  {
+                    tintColor: '#000',
+                    title: 'Choose a folder to move',
+                    cancelButtonIndex: folders.length,
+                    options: [...folders, 'Cancel'],
+                  },
+                  buttonIndex => {
+                    const selectedFolder = folders[buttonIndex]
+                  }
+                )
               }
             )
           }}
@@ -107,7 +148,7 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
             <FileIcon type={type} />
             <Text
               style={{
-                fontSize: 13,
+                fontSize: 14,
                 fontWeight: '500',
                 marginTop: 3,
                 alignSelf: 'center',
@@ -123,8 +164,17 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
             >
               {title}
             </Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 12,
+                color: '#1277ED',
+              }}
+            >
+              {size} MB
+            </Text>
           </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
       )
     }
   }

@@ -36,6 +36,10 @@ const sample: FileInfo[] = [
     path: '/robots.txt',
     size: 0.02,
   },
+  {
+    path: '/empty folder/.',
+    size: 0,
+  },
 ]
 
 export default sample

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   StatusBar,
   View,
@@ -21,15 +21,25 @@ import ClowdStatusBar from './StatusBar'
 import { AppContext } from '@src/context/AppContext'
 import { getBottomSpace } from 'react-native-iphone-x-helper'
 import CryptoJS from 'crypto-js'
+import axios from 'axios'
+import { Buffer } from 'buffer'
+import StartScreen from '@src/screen/StartScreen'
 
 export type RootStackParamList = {
   FileBrowser: { folderName: string; pathName: string } | undefined
+  StartScreen: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
 const MainScaffold: React.FC = () => {
   const appContext = useContext(AppContext)
+  const [totalSpace, setTotalSpace] = useState(0)
+  const [freeSpace, setFreeSpace] = useState(0)
+  ;(async () => {
+    setTotalSpace((await FileSystem.getTotalDiskCapacityAsync()) / 1024 ** 3)
+    setFreeSpace((await FileSystem.getFreeDiskStorageAsync()) / 1024 ** 3)
+  })()
 
   return (
     <View
@@ -53,7 +63,8 @@ const MainScaffold: React.FC = () => {
             },
           }}
         >
-          <Stack.Screen name="FileBrowser" component={FileBrowserScreen} />
+          {/* <Stack.Screen name="FileBrowser" component={FileBrowserScreen} /> */}
+          <Stack.Screen name="StartScreen" component={StartScreen} />
         </Stack.Navigator>
         <TouchableOpacity
           onPress={() => {
@@ -72,6 +83,10 @@ const MainScaffold: React.FC = () => {
                 if (index === 0) {
                 } else if (index === 1) {
                   const result = await DocumentPicker.getDocumentAsync()
+                  console.log(result.name)
+                  const file = await FileSystem.readAsStringAsync(result.uri, {
+                    encoding: 'base64',
+                  })
                 } else if (index === 2) {
                   const result = await ImagePicker.launchImageLibraryAsync()
                   if (result.cancelled === false) {
@@ -82,9 +97,34 @@ const MainScaffold: React.FC = () => {
                       }
                     )
                     const splittedPieces = file.match(/.{1,10485760}/g)
-                    const encryptedPieces = splittedPieces.map(piece =>
-                      CryptoJS.AES.encrypt(piece, 'clowd836')
+                    const encryptedPieces = splittedPieces.map(
+                      piece =>
+                        CryptoJS.AES.encrypt(piece, 'clowd836').toString()
+                      // piece
                     )
+                    const slashSplitted = result.uri.split('/')
+                    const filePath =
+                      appContext.currentPathName +
+                      slashSplitted[slashSplitted.length - 1]
+                    encryptedPieces.forEach((encryptedPiece, i) => {
+                      axios({
+                        url: 'https://dev.clowd.xyz/v1/client/file',
+                        method: 'post',
+                        data: [
+                          {
+                            name: filePath,
+                            order: encryptedPieces.length === 1 ? -1 : i,
+                            data: encryptedPiece,
+                          },
+                        ],
+                      })
+                    })
+                    const updatedFileInfo = [...appContext.fileInfo]
+                    updatedFileInfo.push({
+                      path: filePath,
+                      size: 999,
+                    })
+                    appContext.setFileInfo(updatedFileInfo)
                   }
                 }
               }
@@ -170,7 +210,7 @@ const MainScaffold: React.FC = () => {
               style={{
                 backgroundColor: '#0E85F3',
                 height: '100%',
-                width: '67%',
+                width: `${((totalSpace - freeSpace) / totalSpace) * 100}%`,
               }}
             ></View>
           </View>
@@ -186,7 +226,7 @@ const MainScaffold: React.FC = () => {
                 fontSize: 13,
               }}
             >
-              20GB /{' '}
+              {(totalSpace - freeSpace).toFixed(1)}GB /{' '}
             </Text>
             <Text
               style={{
@@ -194,7 +234,7 @@ const MainScaffold: React.FC = () => {
                 fontSize: 13,
               }}
             >
-              30GB
+              {totalSpace.toFixed(1)}GB
             </Text>
           </View>
         </View>

@@ -1,5 +1,4 @@
 import React, { createContext, useState } from 'react'
-import { RouteProp } from '@react-navigation/native'
 import { Animated } from 'react-native'
 import sampleFileInfo, { FileInfo } from '@src/data/sample-file-info'
 
@@ -17,6 +16,7 @@ interface AppContextProps {
   isSignedIn: boolean
   setIsSignedIn: React.Dispatch<React.SetStateAction<boolean>>
   fileInfo: FileInfo[]
+  setFileInfo: React.Dispatch<React.SetStateAction<FileInfo[]>>
 }
 
 export const AppContext = createContext({} as AppContextProps)
@@ -28,7 +28,7 @@ export const AppProvider: React.FC = ({ children }) => {
   const [navigation, setNavigation] = useState(null)
   const [scrollY, setScrollY] = useState(new Animated.Value(0))
   const [isSignedIn, setIsSignedIn] = useState(false)
-  const [fileInfo, setFileInfo] = useState(sampleFileInfo)
+  const [fileInfo, setFileInfo] = useState([])
 
   return (
     <AppContext.Provider
@@ -46,6 +46,7 @@ export const AppProvider: React.FC = ({ children }) => {
         isSignedIn,
         setIsSignedIn,
         fileInfo,
+        setFileInfo,
       }}
     >
       {children}
