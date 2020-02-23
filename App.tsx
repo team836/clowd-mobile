@@ -23,7 +23,14 @@ export type RootStackParams = {
 
 const RootStack = createNativeStackNavigator<RootStackParamList>()
 
+function clearTokens() {
+  SecureStore.deleteItemAsync('accessToken')
+  SecureStore.deleteItemAsync('refreshToken')
+}
+
 const App: React.FC = () => {
+  // clearTokens()
+
   // Check the tokens and load sign in screen if it's not authenticated
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
