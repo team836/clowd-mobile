@@ -70,8 +70,11 @@ const AddButton: React.FC = () => {
               const encryptedPieces = splitAndEcryptFile(file)
               encryptedPieces.forEach((encryptedPiece, i) => {
                 axios({
-                  url: 'https://clowd.xyz/v1/client/file',
+                  url: 'https://dev.clowd.xyz/v1/client/files',
                   method: 'post',
+                  headers: {
+                    Authorization: `Bearer ${appContext.accessToken}`,
+                  },
                   data: [
                     {
                       name: filePath,
@@ -80,6 +83,12 @@ const AddButton: React.FC = () => {
                     },
                   ],
                 })
+                  .then(res => {
+                    console.log(res.data)
+                  })
+                  .catch(err => {
+                    console.log(err)
+                  })
               })
               const updatedFileInfo = [...appContext.fileInfo]
               updatedFileInfo.push({
