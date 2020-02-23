@@ -17,6 +17,10 @@ interface AppContextProps {
   setIsSignedIn: React.Dispatch<React.SetStateAction<boolean>>
   fileInfo: FileInfo[]
   setFileInfo: React.Dispatch<React.SetStateAction<FileInfo[]>>
+  accessToken: string
+  setAccessToken: React.Dispatch<React.SetStateAction<string>>
+  refreshToken: string
+  setRefreshToken: React.Dispatch<React.SetStateAction<string>>
 }
 
 export const AppContext = createContext({} as AppContextProps)
@@ -29,6 +33,8 @@ export const AppProvider: React.FC = ({ children }) => {
   const [scrollY, setScrollY] = useState(new Animated.Value(0))
   const [isSignedIn, setIsSignedIn] = useState(false)
   const [fileInfo, setFileInfo] = useState([])
+  const [accessToken, setAccessToken] = useState('')
+  const [refreshToken, setRefreshToken] = useState('')
 
   return (
     <AppContext.Provider
@@ -47,6 +53,10 @@ export const AppProvider: React.FC = ({ children }) => {
         setIsSignedIn,
         fileInfo,
         setFileInfo,
+        accessToken,
+        setAccessToken,
+        refreshToken,
+        setRefreshToken,
       }}
     >
       {children}

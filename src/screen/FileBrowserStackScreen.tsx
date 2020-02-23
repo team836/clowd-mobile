@@ -10,6 +10,7 @@ import AddButton from '@src/component/AddButton'
 import SpaceGauge from '@src/component/SpaceGauge'
 import { AppContext } from '@src/context/AppContext'
 import sampleFileInfo from '@src/data/sample-file-info'
+import axios from 'axios'
 
 export type FileBrowserStackScreenParamList = {
   FileList: {
@@ -39,6 +40,9 @@ const FileBrowserStack = createNativeStackNavigator<
 const FileBrowserStackScreen: React.FC<RootStackParams> = ({ navigation }) => {
   const appContext = useContext(AppContext)
 
+  // SecureStore.deleteItemAsync('accessToken')
+  // SecureStore.deleteItemAsync('refreshToken')
+
   // Check if there exists an access token
   // If not, navigate to Google sign in screen
   useEffect(() => {
@@ -46,11 +50,71 @@ const FileBrowserStackScreen: React.FC<RootStackParams> = ({ navigation }) => {
       if (!accessToken) {
         navigation.push('Start')
       } else {
+        // Access token exists
+        // Check if the token valid
+        // if not, refresh tokens
+        axios({
+          url: 'https://dev.clowd.xyz/check-token',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+          .then(res => {
+            console.log(res.data)
+          })
+          .catch(err => {
+            if (err && err.response) {
+              const status = err.response.status
+              if (status === 404) {
+                // Valid
+                console.log('valid tokens')
+              } else {
+                console.log('invalid tokens -> refreshing tokens')
+                SecureStore.getItemAsync('refreshToken').then(refreshToken => {
+                  axios({
+                    url: 'https://dev.api.clowd.xyz/v1/auth/login/refresh',
+                    method: 'get',
+                    headers: {
+                      Authorization: `Bearer ${refreshToken}`,
+                    },
+                  })
+                    .then(res => {
+                      console.log('tokens have been refreshed')
+                      // Refresh the tokens and store to the machine again
+                      const { accessToken, refreshToken } = res.data
+                      SecureStore.setItemAsync('accessToken', accessToken)
+                      SecureStore.setItemAsync('refreshToken', refreshToken)
+                      appContext.setAccessToken(accessToken)
+                      appContext.setRefreshToken(refreshToken)
+                    })
+                    .catch(err => {
+                      console.log('should login again')
+                      navigation.push('Start')
+                    })
+                })
+              }
+            }
+          })
+
+        // TODO
         // Fetch file info from server
         appContext.setFileInfo(sampleFileInfo)
+
+        appContext.setAccessToken(accessToken)
+
+        SecureStore.getItemAsync('refreshToken').then(refreshToken => {
+          console.log(refreshToken)
+          appContext.setRefreshToken(refreshToken)
+        })
       }
+      // navigation.push('Start')
     })
   }, [])
+
+  navigation.addListener('focus', () => {
+    console.log('stack screen focused')
+    appContext.setFileInfo(sampleFileInfo)
+  })
 
   return (
     <>
@@ -64,7 +128,7 @@ const FileBrowserStackScreen: React.FC<RootStackParams> = ({ navigation }) => {
       >
         <FileBrowserStack.Screen name="FileList" component={FileList} />
       </FileBrowserStack.Navigator>
-      <SpaceGauge />
+      {/* <SpaceGauge /> */}
       <AddButton />
     </>
   )
