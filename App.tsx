@@ -10,6 +10,9 @@ import * as SecureStore from 'expo-secure-store'
 
 enableScreens()
 
+SecureStore.deleteItemAsync('accessToken')
+SecureStore.deleteItemAsync('refreshToken')
+
 export type RootStackParamList = {
   FileBrowser: undefined
   Start: undefined
