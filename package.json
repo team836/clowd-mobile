@@ -19,11 +19,13 @@
     "crypto-js": "^3.1.9-1",
     "expo": "~36.0.2",
     "expo-blur": "~8.0.0",
+    "expo-camera": "~8.0.0",
     "expo-device": "~2.0.0",
     "expo-document-picker": "~8.0.0",
     "expo-file-system": "~8.0.0",
     "expo-google-app-auth": "^8.0.1",
     "expo-image-picker": "~8.0.1",
+    "expo-secure-store": "~8.0.0",
     "expo-web-browser": "~8.0.0",
     "react": "~16.12.0",
     "react-dom": "~16.12.0",
@@ -35,7 +37,7 @@
     "react-native-screens": "2.0.0-alpha.29",
     "react-native-status-bar-height": "^2.4.0",
     "react-native-webview": "7.4.3",
-    "expo-secure-store": "~8.0.0"
+    "uuid": "^7.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.3",
