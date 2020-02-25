@@ -10,6 +10,7 @@ import FileBrowserGridItem, {
   ClowdFiles,
 } from './FileBrowserGridItem'
 import { AppContext } from '@src/context/AppContext'
+import { getBottomSpace } from 'react-native-iphone-x-helper'
 
 function addDummyItems(items: ClowdFiles) {
   const numColumns = 3
@@ -20,6 +21,7 @@ function addDummyItems(items: ClowdFiles) {
       title: '',
       type: '',
       size: 0,
+      path: '',
     })
   }
   return temp
@@ -69,6 +71,7 @@ const FileList: React.FC<FileBrowserStackScreenParams> = ({ navigation }) => {
               title,
               type,
               size: info.size,
+              path: info.path,
             }
           })
           .filter((item, pos, self) => {
@@ -87,7 +90,7 @@ const FileList: React.FC<FileBrowserStackScreenParams> = ({ navigation }) => {
   }, [appContext.fileInfo])
 
   useEffect(() => {
-    let f: EventListenerCallback<'focus', undefined>
+    let f
     navigation.addListener(
       'focus',
       (f = () => {
@@ -121,6 +124,7 @@ const FileList: React.FC<FileBrowserStackScreenParams> = ({ navigation }) => {
         style={{
           padding: 5,
           paddingTop: 20,
+          paddingBottom: getBottomSpace() + 100,
           backgroundColor: '#fff',
         }}
         numColumns={numColumns}
@@ -132,6 +136,7 @@ const FileList: React.FC<FileBrowserStackScreenParams> = ({ navigation }) => {
             type={item.type}
             size={item.size}
             navigation={navigation}
+            fullPath={item.path}
           />
         )}
         keyExtractor={item => item.size + item.title}
