@@ -12,11 +12,15 @@ import {
 } from 'react-native'
 import { AppContext } from '@src/context/AppContext'
 import { FileBrowserStackScreenNavigationProp } from '@src/screen/FileBrowserStackScreen'
+import axios from 'axios'
+import CryptoJS from 'crypto-js'
+import * as FileSystem from 'expo-file-system'
 
 export type ClowdFile = {
   title: string
   type: string
   size: number
+  path: string
 }
 
 export type ClowdFiles = ClowdFile[]
@@ -25,6 +29,7 @@ type FileBrowserGridItemProps = {
   title: string
   type: string
   size: number
+  fullPath: string
   navigation: FileBrowserStackScreenNavigationProp
 }
 
@@ -33,6 +38,7 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
   type,
   size,
   navigation,
+  fullPath,
 }) => {
   const appContext = useContext(AppContext)
   const folderIconSize = 90
@@ -100,10 +106,40 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
                 pathName: appContext.currentPathName + title + '/',
               })
             } else {
-              Share.share({
-                url: '',
-                title,
+              axios({
+                url: `https://dev.clowd.xyz/v1/client/files`,
+                method: 'get',
+                headers: {
+                  Authorization: `Bearer ${appContext.accessToken}`,
+                  files: JSON.stringify([
+                    {
+                      name: appContext.currentPathName + title,
+                    },
+                  ]),
+                },
               })
+                .then(res => {
+                  // Share.share({
+                  //   url: res.data,
+                  //   title,
+                  // })
+                  const fileUri = `data:image/jpg;base64,${res.data[0].data}`
+                  FileSystem.downloadAsync(
+                    fileUri,
+                    FileSystem.documentDirectory +
+                      appContext.currentPathName.replace(/^\//g, '') +
+                      title
+                  ).then(value => {
+                    console.log(value)
+                    Share.share({
+                      url: value.uri,
+                      title: title,
+                    })
+                  })
+                })
+                .catch(err => {
+                  console.log(err)
+                })
             }
           }}
           onLongPress={() => {
@@ -136,17 +172,45 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
                     )
                   })
 
-                ActionSheetIOS.showActionSheetWithOptions(
-                  {
-                    tintColor: '#000',
-                    title: 'Choose a folder to move',
-                    cancelButtonIndex: folders.length,
-                    options: [...folders, 'Cancel'],
-                  },
-                  buttonIndex => {
-                    const selectedFolder = folders[buttonIndex]
+                if (buttonIndex === 0) {
+                  // Move
+                  ActionSheetIOS.showActionSheetWithOptions(
+                    {
+                      tintColor: '#000',
+                      title: 'Choose a folder to move',
+                      cancelButtonIndex: folders.length,
+                      options: [...folders, 'Cancel'],
+                    },
+                    buttonIndex => {
+                      const selectedFolder = folders[buttonIndex]
+                    }
+                  )
+                } else if (buttonIndex === 1) {
+                  // Delete
+                  console.log(fullPath)
+                  axios
+                    .delete('https://dev.clowd.xyz/v1/client/files', {
+                      headers: {
+                        Authorization: `Bearer ${appContext.accessToken}`,
+                      },
+                      data: [
+                        {
+                          name: fullPath,
+                        },
+                      ],
+                    })
+                    .then(res => {
+                      console.log('delete completed')
+                    })
+                  const index = appContext.fileInfo.findIndex(item => {
+                    return item.path === fullPath
+                  })
+                  const newFileInfo = [...appContext.fileInfo]
+                  if (index >= 0) {
+                    newFileInfo.splice(index, 1)
+                    appContext.setFileInfo(newFileInfo)
                   }
-                )
+                }
               }
             )
           }}
