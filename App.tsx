@@ -4,7 +4,7 @@ import { AppProvider } from '@src/context/AppContext'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import StartScreen from '@src/screen/StartScreen'
 import FileBrowserStackScreen from '@src/screen/FileBrowserStackScreen'
-import { NavigationNativeContainer } from '@react-navigation/native'
+import { NavigationContainer } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import * as SecureStore from 'expo-secure-store'
 
@@ -39,10 +39,10 @@ const App: React.FC = () => {
 
   return (
     <AppProvider>
-      <NavigationNativeContainer>
+      <NavigationContainer>
         <RootStack.Navigator
           screenOptions={{
-            presentation: 'transparentModal',
+            stackPresentation: 'transparentModal',
             headerShown: false,
           }}
         >
@@ -52,7 +52,7 @@ const App: React.FC = () => {
           />
           <RootStack.Screen name="Start" component={StartScreen} />
         </RootStack.Navigator>
-      </NavigationNativeContainer>
+      </NavigationContainer>
     </AppProvider>
   )
 }
