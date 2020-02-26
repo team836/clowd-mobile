@@ -40,9 +40,6 @@ const FileBrowserStack = createNativeStackNavigator<
 const FileBrowserStackScreen: React.FC<RootStackParams> = ({ navigation }) => {
   const appContext = useContext(AppContext)
 
-  // SecureStore.deleteItemAsync('accessToken')
-  // SecureStore.deleteItemAsync('refreshToken')
-
   // Check if there exists an access token
   // If not, navigate to Google sign in screen
   useEffect(() => {
@@ -54,7 +51,7 @@ const FileBrowserStackScreen: React.FC<RootStackParams> = ({ navigation }) => {
         // Check if the token valid
         // if not, refresh tokens
         axios({
-          url: 'https://dev.clowd.xyz/check-token',
+          url: 'https://clowd.xyz/check-token',
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -72,7 +69,7 @@ const FileBrowserStackScreen: React.FC<RootStackParams> = ({ navigation }) => {
                 console.log('invalid tokens -> refreshing tokens')
                 SecureStore.getItemAsync('refreshToken').then(refreshToken => {
                   axios({
-                    url: 'https://dev.api.clowd.xyz/v1/auth/login/refresh',
+                    url: 'https://api.clowd.xyz/v1/auth/login/refresh',
                     method: 'get',
                     headers: {
                       Authorization: `Bearer ${refreshToken}`,
@@ -98,7 +95,24 @@ const FileBrowserStackScreen: React.FC<RootStackParams> = ({ navigation }) => {
 
         // TODO
         // Fetch file info from server
-        appContext.setFileInfo(sampleFileInfo)
+        axios
+          .get('https://clowd.xyz/v1/client/dir', {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          })
+          .then(res => {
+            const fileList = res.data
+            // appContext.setFileInfo(sampleFileInfo)
+            appContext.setFileInfo(
+              fileList.map(file => {
+                return {
+                  path: file.name,
+                  size: parseFloat((file.size / 1024 / 1024).toFixed(2)),
+                }
+              })
+            )
+          })
 
         appContext.setAccessToken(accessToken)
 
@@ -111,17 +125,12 @@ const FileBrowserStackScreen: React.FC<RootStackParams> = ({ navigation }) => {
     })
   }, [])
 
-  navigation.addListener('focus', () => {
-    console.log('stack screen focused')
-    appContext.setFileInfo(sampleFileInfo)
-  })
-
   return (
     <>
       <StatusBar hidden={false} />
       <FileBrowserStack.Navigator
         screenOptions={{
-          presentation: 'push',
+          stackPresentation: 'push',
           headerTintColor: '#000',
           headerLargeTitle: true,
         }}
