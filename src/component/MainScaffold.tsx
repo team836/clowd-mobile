@@ -108,7 +108,7 @@ const MainScaffold: React.FC = () => {
                       slashSplitted[slashSplitted.length - 1]
                     encryptedPieces.forEach((encryptedPiece, i) => {
                       axios({
-                        url: 'https://dev.clowd.xyz/v1/client/file',
+                        url: 'https://clowd.xyz/v1/client/file',
                         method: 'post',
                         data: [
                           {

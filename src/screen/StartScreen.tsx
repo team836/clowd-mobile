@@ -15,6 +15,7 @@ import * as WebBrowser from 'expo-web-browser'
 import { Linking } from 'expo'
 import * as SecureStore from 'expo-secure-store'
 import { RootStackParams, RootStackNavigationProp } from '@root/App'
+import axios from 'axios'
 
 const styles = StyleSheet.create({
   mainLayout: {
@@ -103,10 +104,10 @@ const LogInButton: React.FC<LogInButtonProps> = ({ navigation }) => {
         style={styles.button}
         onPress={async () => {
           const deepLink = Linking.makeUrl()
+          console.log('deepLink: ', +deepLink)
           try {
             const result = await WebBrowser.openBrowserAsync(
-              // 'https://dev.api.clowd.xyz/v1/auth/login'
-              'https://dev.api.clowd.xyz/v1/auth/clowdee/login'
+              'https://api.clowd.xyz/v1/auth/clowdee/login'
             )
           } catch (error) {
             console.error(error)
@@ -130,7 +131,10 @@ const LogInButton: React.FC<LogInButtonProps> = ({ navigation }) => {
 }
 
 const StartScreen: React.FC<RootStackParams> = ({ navigation }) => {
+  const appContext = useContext(AppContext)
+
   Linking.addEventListener('url', async e => {
+    console.log('redirected from Google OAuth')
     const url = e.url
     let { path, queryParams } = Linking.parse(url)
     const { accessToken, refreshToken } = queryParams
@@ -143,7 +147,29 @@ const StartScreen: React.FC<RootStackParams> = ({ navigation }) => {
     } else {
       await SecureStore.setItemAsync('accessToken', accessToken)
       await SecureStore.setItemAsync('refreshToken', refreshToken)
-      navigation.popToTop()
+      appContext.setAccessToken(accessToken)
+      appContext.setRefreshToken(refreshToken)
+
+      // Fetch file info from server
+      axios
+        .get('https://clowd.xyz/v1/client/dir', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then(res => {
+          const fileList = res.data
+          // appContext.setFileInfo(sampleFileInfo)
+          appContext.setFileInfo(
+            fileList.map(file => {
+              return {
+                path: file.name,
+                size: parseFloat((file.size / 1024 / 1024).toFixed(2)),
+              }
+            })
+          )
+          navigation.popToTop()
+        })
     }
   })
 

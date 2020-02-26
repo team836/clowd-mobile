@@ -107,7 +107,7 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
               })
             } else {
               axios({
-                url: `https://dev.clowd.xyz/v1/client/files`,
+                url: `https://clowd.xyz/v1/client/files`,
                 method: 'get',
                 headers: {
                   Authorization: `Bearer ${appContext.accessToken}`,
@@ -189,7 +189,7 @@ const FileBrowserGridItem: React.FC<FileBrowserGridItemProps> = ({
                   // Delete
                   console.log(fullPath)
                   axios
-                    .delete('https://dev.clowd.xyz/v1/client/files', {
+                    .delete('https://clowd.xyz/v1/client/files', {
                       headers: {
                         Authorization: `Bearer ${appContext.accessToken}`,
                       },
