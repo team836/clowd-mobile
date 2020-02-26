@@ -18,7 +18,7 @@ async function checkTokensExist() {
 
   // try {
   //   const response = await axios({
-  //     url: 'https://dev.api.clowd.xyz/v1/auth/login/refresh',
+  //     url: 'https://api.clowd.xyz/v1/auth/login/refresh',
   //     method: 'get',
   //     headers: {
   //       Authorization: `Bearer ${refreshToken}`,
